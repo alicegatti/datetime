@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #222;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        body.light-mode {
+            background-color: #f0f0f0;
+            color: #000;
+            transition: transform 0.5s;
+        }
+
+        #time-container {
+            position: relative;
+            transition: transform 0.5s;
+        }
+
+        #time {
+            font-size: 750%;
+            transition: transform 0.5s;
+        }
+
+        #date {
+            font-size: 150%;
+            margin-top: 10px; 
+            transition: transform 0.5s;
+        }
+
+        #buttons {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        #mode,
+        #rotate,
+        #fullscreen {
+            cursor: pointer;
+            background-color: rgba(0, 123, 255, 0.8);
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            margin: 0 5px;
+        }
+
+        /* #mode:hover,
+        #rotate:hover,
+        #fullscreen:hover {
+            background-color: #0056b3;
+        } */
+    </style>
+
+</head>
+
+<body>
+    <div id="time-container">
+        <div id="time"></div>
+        <div id="date"></div>
+    </div>
+    <div id="buttons">
+        <button id="mode">Mode</button>
+        <button id="rotate">Rotate</button>
+        <button id="fullscreen">Full Screen</button>
+    </div>
+    <script>
+        var totalRotation = 0;
+
+        function updateTime() {
+            var now = new Date();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var day = now.getDate();
+            var month = now.getMonth() + 1; // Months are zero-indexed
+            var year = now.getFullYear();
+
+            hours = (hours < 10 ? "0" : "") + hours;
+            minutes = (minutes < 10 ? "0" : "") + minutes;
+            day = (day < 10 ? "0" : "") + day;
+            month = (month < 10 ? "0" : "") + month;
+
+            var timeString = hours + ":" + minutes;
+            var dateString = day + "/" + month + "/" + year;
+
+            document.getElementById("time").textContent = timeString;
+            document.getElementById("date").textContent = dateString;
+        }
+
+        function toggleMode() {
+            document.body.classList.toggle("light-mode");
+        }
+
+        function rotateText() {
+            var timeContainer = document.getElementById("time-container");
+            totalRotation += 90;
+            timeContainer.style.transform = "rotate(" + totalRotation + "deg)";
+        }
+
+        function toggleFullScreen() {
+            var elem = document.documentElement;
+            if (!document.fullscreenElement) {
+                elem.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable full-screen mode: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        setInterval(updateTime, 60000);
+
+        updateTime();
+
+        document.getElementById("mode").addEventListener("click", toggleMode);
+        document.getElementById("rotate").addEventListener("click", rotateText);
+        document.getElementById("fullscreen").addEventListener("click", toggleFullScreen);
+    </script>
+</body>
+
+</html>
